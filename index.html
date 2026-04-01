@@ -1,0 +1,1600 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Caravan — Premium Restaurant Tashkent</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;900&family=Raleway:ital,wght@0,200;0,300;0,400;0,500;1,200;1,300&display=swap" rel="stylesheet">
+<style>
+:root {
+  --sand:   #e8c97a;
+  --ember:  #c0441b;
+  --deep:   #0a0704;
+  --dusk:   #1a1008;
+  --smoke:  #2e1d0e;
+  --ash:    #b0927a;
+  --white:  #fff;
+  --glow:   rgba(232,201,122,0.18);
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+
+/* ── CUSTOM CURSOR ── */
+body {
+  font-family: 'Raleway', sans-serif;
+  background: var(--deep);
+  color: var(--ash);
+  overflow-x: hidden;
+  cursor: none;
+}
+
+#cursor {
+  position: fixed;
+  width: 10px; height: 10px;
+  background: var(--sand);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 9999;
+  transform: translate(-50%,-50%);
+  transition: transform 0.1s, width 0.3s, height 0.3s, background 0.3s;
+  mix-blend-mode: difference;
+}
+
+#cursor-ring {
+  position: fixed;
+  width: 36px; height: 36px;
+  border: 1px solid rgba(232,201,122,0.4);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 9998;
+  transform: translate(-50%,-50%);
+  transition: transform 0.18s ease, width 0.3s, height 0.3s;
+}
+
+/* ── STARS BG ── */
+#stars-canvas {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+}
+
+/* ── LANG BAR ── */
+.lang-bar {
+  position: fixed;
+  top: 0; right: 0;
+  z-index: 500;
+  display: flex;
+  gap: 2px;
+  padding: 14px 28px;
+}
+
+.lang-btn {
+  background: none;
+  border: none;
+  font-family: 'Raleway', sans-serif;
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  cursor: none;
+  padding: 5px 10px;
+  color: rgba(232,201,122,0.35);
+  transition: color 0.3s;
+  border-bottom: 1px solid transparent;
+}
+
+.lang-btn.active, .lang-btn:hover {
+  color: var(--sand);
+  border-bottom-color: var(--sand);
+}
+
+/* ── NAV ── */
+nav {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 400;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 24px 48px;
+  background: linear-gradient(to bottom, rgba(10,7,4,0.9) 0%, transparent 100%);
+  transition: background 0.4s;
+}
+
+#mainNav {
+  top: 20px;
+}
+
+nav.scrolled {
+  background: rgba(10,7,4,0.95);
+  border-bottom: 1px solid rgba(232,201,122,0.08);
+  padding: 16px 48px;
+}
+
+.nav-logo {
+  text-decoration: none;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.nav-logo-main {
+  font-family: 'Cinzel', serif;
+  font-size: 22px;
+  font-weight: 600;
+  color: var(--sand);
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+}
+
+.nav-logo-sub {
+  font-size: 9px;
+  letter-spacing: 0.35em;
+  text-transform: uppercase;
+  color: rgba(232,201,122,0.35);
+}
+
+.nav-links {
+  display: flex;
+  gap: 36px;
+  list-style: none;
+}
+
+.nav-links a {
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  text-decoration: none;
+  color: rgba(255,255,255,0.4);
+  transition: color 0.3s;
+  position: relative;
+  padding-bottom: 4px;
+}
+
+.nav-links a::after {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 0;
+  width: 0; height: 1px;
+  background: var(--sand);
+  transition: width 0.3s;
+}
+
+.nav-links a:hover { color: var(--sand); }
+.nav-links a:hover::after { width: 100%; }
+
+.hamburger {
+  display: none;
+  flex-direction: column;
+  gap: 6px;
+  cursor: none;
+  background: none;
+  border: none;
+  padding: 4px;
+}
+
+.hamburger span {
+  display: block; width: 26px; height: 1px;
+  background: var(--sand); transition: all 0.3s;
+}
+
+.mobile-menu {
+  display: none;
+  position: fixed; inset: 0;
+  background: rgba(10,7,4,0.97);
+  z-index: 600;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 36px;
+}
+
+.mobile-menu.open { display: flex; }
+
+.mobile-menu a {
+  font-family: 'Cinzel', serif;
+  font-size: 28px;
+  font-weight: 400;
+  text-decoration: none;
+  color: rgba(232,201,122,0.6);
+  letter-spacing: 0.15em;
+  transition: color 0.3s;
+}
+
+.mobile-menu a:hover { color: var(--sand); }
+
+.close-menu {
+  position: absolute; top: 24px; right: 28px;
+  background: none; border: none; font-size: 24px;
+  cursor: none; color: rgba(232,201,122,0.4);
+}
+
+/* ── HERO ── */
+.hero {
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: 120px 40px 80px;
+  overflow: hidden;
+  z-index: 1;
+}
+
+.hero-desert {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse at 50% 100%, rgba(192,68,27,0.25) 0%, transparent 60%),
+    radial-gradient(ellipse at 30% 60%, rgba(232,201,122,0.06) 0%, transparent 50%),
+    linear-gradient(180deg, #0a0704 0%, #1a0c06 60%, #2a1408 100%);
+}
+
+.hero-dunes {
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 220px;
+  overflow: hidden;
+}
+
+.hero-dunes svg {
+  width: 100%; height: 100%;
+}
+
+.hero-ornament-ring {
+  position: absolute;
+  width: 520px; height: 520px;
+  border: 1px solid rgba(232,201,122,0.06);
+  border-radius: 50%;
+  top: 50%; left: 50%;
+  transform: translate(-50%,-50%);
+  animation: slowSpin 40s linear infinite;
+}
+
+.hero-ornament-ring::before {
+  content: '';
+  position: absolute;
+  inset: 40px;
+  border: 1px solid rgba(232,201,122,0.04);
+  border-radius: 50%;
+}
+
+@keyframes slowSpin {
+  to { transform: translate(-50%,-50%) rotate(360deg); }
+}
+
+.hero-eyebrow {
+  font-size: 10px;
+  letter-spacing: 0.35em;
+  text-transform: uppercase;
+  color: var(--sand);
+  opacity: 0;
+  animation: riseIn 1.2s ease 0.4s forwards;
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  justify-content: center;
+}
+
+.hero-eyebrow span { display: block; width: 30px; height: 1px; background: var(--sand); opacity: 0.4; }
+
+.hero-title {
+  font-family: 'Cinzel', serif;
+  font-size: clamp(64px, 14vw, 160px);
+  font-weight: 900;
+  line-height: 0.9;
+  letter-spacing: 0.06em;
+  color: transparent;
+  background: linear-gradient(135deg, #f0d98a 0%, #c9963a 40%, #e8c97a 70%, #fff8dc 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  opacity: 0;
+  animation: riseIn 1.4s ease 0.6s forwards;
+  position: relative;
+  z-index: 2;
+}
+
+.hero-title-shadow {
+  position: absolute;
+  font-family: 'Cinzel', serif;
+  font-size: clamp(64px, 14vw, 160px);
+  font-weight: 900;
+  letter-spacing: 0.06em;
+  color: transparent;
+  -webkit-text-stroke: 1px rgba(232,201,122,0.08);
+  top: 4px; left: 0; right: 0;
+  z-index: 1;
+}
+
+.hero-tagline {
+  font-size: clamp(12px, 2vw, 16px);
+  font-weight: 200;
+  font-style: italic;
+  letter-spacing: 0.12em;
+  color: rgba(255,255,255,0.4);
+  margin: 20px 0 48px;
+  opacity: 0;
+  animation: riseIn 1.2s ease 0.9s forwards;
+}
+
+.hero-badges {
+  display: flex;
+  gap: 32px;
+  justify-content: center;
+  flex-wrap: wrap;
+  opacity: 0;
+  animation: riseIn 1.2s ease 1.1s forwards;
+  margin-bottom: 48px;
+}
+
+.hero-badge {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+
+.hero-badge-num {
+  font-family: 'Cinzel', serif;
+  font-size: 32px;
+  font-weight: 600;
+  color: var(--sand);
+  line-height: 1;
+}
+
+.hero-badge-label {
+  font-size: 9px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.3);
+}
+
+.hero-badge-sep {
+  width: 1px;
+  height: 40px;
+  background: rgba(232,201,122,0.15);
+  align-self: center;
+}
+
+.hero-cta-wrap {
+  opacity: 0;
+  animation: riseIn 1.2s ease 1.3s forwards;
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.btn-gold {
+  display: inline-block;
+  padding: 16px 40px;
+  background: linear-gradient(135deg, #c9963a, #e8c97a);
+  color: var(--deep);
+  text-decoration: none;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  transition: all 0.4s;
+  position: relative;
+  overflow: hidden;
+  cursor: none;
+}
+
+.btn-gold::before {
+  content: '';
+  position: absolute;
+  top: 0; left: -100%;
+  width: 100%; height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+  transition: left 0.5s;
+}
+
+.btn-gold:hover::before { left: 100%; }
+.btn-gold:hover { transform: translateY(-3px); box-shadow: 0 16px 40px rgba(232,201,122,0.3); }
+
+.btn-ghost {
+  display: inline-block;
+  padding: 16px 40px;
+  background: transparent;
+  color: rgba(232,201,122,0.6);
+  text-decoration: none;
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  border: 1px solid rgba(232,201,122,0.2);
+  transition: all 0.3s;
+  cursor: none;
+}
+
+.btn-ghost:hover {
+  color: var(--sand);
+  border-color: var(--sand);
+  background: rgba(232,201,122,0.05);
+}
+
+@keyframes riseIn {
+  from { opacity: 0; transform: translateY(30px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ── MARQUEE ── */
+.marquee-wrap {
+  position: relative;
+  z-index: 2;
+  overflow: hidden;
+  border-top: 1px solid rgba(232,201,122,0.1);
+  border-bottom: 1px solid rgba(232,201,122,0.1);
+  padding: 14px 0;
+  background: rgba(192,68,27,0.08);
+}
+
+.marquee-track {
+  display: flex;
+  white-space: nowrap;
+  animation: marqueeScroll 22s linear infinite;
+  gap: 0;
+}
+
+.marquee-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 20px;
+  padding: 0 40px;
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: rgba(232,201,122,0.5);
+  flex-shrink: 0;
+}
+
+.marquee-dot {
+  width: 4px; height: 4px;
+  background: var(--ember);
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+@keyframes marqueeScroll {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+
+/* ── SECTION COMMON ── */
+.section-eyebrow {
+  font-size: 9px;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--sand);
+  margin-bottom: 14px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  opacity: 0.7;
+}
+
+.section-eyebrow::before {
+  content: '';
+  display: block;
+  width: 28px; height: 1px;
+  background: var(--sand);
+}
+
+.section-title {
+  font-family: 'Cinzel', serif;
+  font-size: clamp(32px, 5vw, 62px);
+  font-weight: 600;
+  line-height: 1.05;
+  letter-spacing: 0.04em;
+  color: rgba(255,255,255,0.88);
+  margin-bottom: 48px;
+}
+
+/* ── ABOUT ── */
+#about {
+  position: relative;
+  z-index: 2;
+  padding: 120px 60px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 100px;
+  align-items: center;
+  max-width: 1300px;
+  margin: 0 auto;
+}
+
+.about-text p {
+  font-size: 16px;
+  font-weight: 300;
+  line-height: 1.9;
+  color: rgba(255,255,255,0.4);
+  margin-bottom: 20px;
+}
+
+.about-text p strong {
+  color: rgba(232,201,122,0.8);
+  font-weight: 500;
+}
+
+.about-visual {
+  position: relative;
+  height: 480px;
+}
+
+.about-card {
+  position: absolute;
+  background: var(--smoke);
+  border: 1px solid rgba(232,201,122,0.1);
+  padding: 36px 32px;
+  transition: border-color 0.3s;
+}
+
+.about-card:hover { border-color: rgba(232,201,122,0.3); }
+
+.about-card-a {
+  top: 0; left: 0;
+  right: 60px;
+  bottom: 140px;
+}
+
+.about-card-b {
+  bottom: 0; right: 0;
+  left: 60px;
+  top: 200px;
+  background: rgba(192,68,27,0.12);
+  border-color: rgba(192,68,27,0.2);
+}
+
+.big-num {
+  font-family: 'Cinzel', serif;
+  font-size: 72px;
+  font-weight: 900;
+  color: var(--sand);
+  line-height: 1;
+  opacity: 0.9;
+}
+
+.big-label {
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.3);
+  margin-top: 6px;
+}
+
+.about-card-b .big-num { color: var(--ember); opacity: 0.9; }
+
+/* ── EXPERIENCE ── */
+#experience {
+  position: relative;
+  z-index: 2;
+  padding: 100px 60px;
+  background: linear-gradient(180deg, transparent 0%, rgba(192,68,27,0.06) 50%, transparent 100%);
+}
+
+.exp-inner { max-width: 1200px; margin: 0 auto; text-align: center; }
+
+.exp-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 2px;
+  margin-top: 60px;
+}
+
+.exp-card {
+  padding: 48px 28px;
+  background: rgba(255,255,255,0.02);
+  border: 1px solid rgba(232,201,122,0.06);
+  position: relative;
+  overflow: hidden;
+  transition: background 0.4s;
+}
+
+.exp-card::before {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 0;
+  background: linear-gradient(to top, rgba(192,68,27,0.15), transparent);
+  transition: height 0.4s;
+}
+
+.exp-card:hover { background: rgba(255,255,255,0.04); }
+.exp-card:hover::before { height: 100%; }
+
+.exp-icon {
+  font-size: 36px;
+  margin-bottom: 20px;
+  display: block;
+  position: relative;
+  z-index: 1;
+}
+
+.exp-title {
+  font-family: 'Cinzel', serif;
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  color: rgba(232,201,122,0.8);
+  margin-bottom: 12px;
+  position: relative;
+  z-index: 1;
+}
+
+.exp-desc {
+  font-size: 13px;
+  font-weight: 300;
+  line-height: 1.7;
+  color: rgba(255,255,255,0.3);
+  position: relative;
+  z-index: 1;
+}
+
+/* ── MENU ── */
+#menu {
+  position: relative;
+  z-index: 2;
+  padding: 100px 60px;
+}
+
+.menu-inner { max-width: 1200px; margin: 0 auto; }
+
+.menu-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-bottom: 60px;
+  flex-wrap: wrap;
+  gap: 24px;
+}
+
+.menu-note {
+  font-size: 12px;
+  font-weight: 300;
+  font-style: italic;
+  color: rgba(255,255,255,0.2);
+  max-width: 260px;
+  line-height: 1.6;
+}
+
+.menu-items {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2px;
+}
+
+.menu-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 28px 32px;
+  background: rgba(255,255,255,0.02);
+  border: 1px solid rgba(232,201,122,0.05);
+  gap: 20px;
+  transition: background 0.3s, border-color 0.3s;
+  position: relative;
+  overflow: hidden;
+}
+
+.menu-row::after {
+  content: '';
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: 0;
+  background: linear-gradient(to right, rgba(192,68,27,0.15), transparent);
+  transition: width 0.4s;
+}
+
+.menu-row:hover { background: rgba(255,255,255,0.04); border-color: rgba(232,201,122,0.12); }
+.menu-row:hover::after { width: 120px; }
+
+.menu-row-left { display: flex; flex-direction: column; gap: 6px; flex: 1; position: relative; z-index: 1; }
+
+.menu-row-name {
+  font-family: 'Cinzel', serif;
+  font-size: 15px;
+  font-weight: 600;
+  color: rgba(255,255,255,0.82);
+  letter-spacing: 0.05em;
+}
+
+.menu-row-desc {
+  font-size: 12px;
+  font-weight: 300;
+  color: rgba(255,255,255,0.28);
+  line-height: 1.5;
+}
+
+.menu-row-price {
+  font-family: 'Cinzel', serif;
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--sand);
+  white-space: nowrap;
+  position: relative;
+  z-index: 1;
+}
+
+.menu-featured {
+  grid-column: 1 / -1;
+  background: linear-gradient(135deg, rgba(192,68,27,0.12), rgba(232,201,122,0.06));
+  border-color: rgba(232,201,122,0.15) !important;
+  padding: 36px 40px;
+}
+
+.menu-featured-badge {
+  display: inline-block;
+  font-size: 8px;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--sand);
+  border: 1px solid rgba(232,201,122,0.3);
+  padding: 3px 10px;
+  margin-bottom: 10px;
+}
+
+/* ── REVIEWS ── */
+#reviews {
+  position: relative;
+  z-index: 2;
+  padding: 100px 60px;
+  background: linear-gradient(180deg, transparent, rgba(10,7,4,0.6), transparent);
+}
+
+.reviews-inner { max-width: 1200px; margin: 0 auto; }
+
+.reviews-grid {
+  display: grid;
+  grid-template-columns: repeat(3,1fr);
+  gap: 2px;
+}
+
+.review-card {
+  padding: 40px 32px;
+  background: rgba(255,255,255,0.02);
+  border: 1px solid rgba(232,201,122,0.06);
+  position: relative;
+  overflow: hidden;
+  transition: border-color 0.3s;
+}
+
+.review-card:hover { border-color: rgba(232,201,122,0.18); }
+
+.review-quote-mark {
+  font-family: 'Cinzel', serif;
+  font-size: 80px;
+  line-height: 0.6;
+  color: rgba(232,201,122,0.06);
+  margin-bottom: 20px;
+  display: block;
+}
+
+.review-text {
+  font-size: 14px;
+  font-weight: 300;
+  font-style: italic;
+  line-height: 1.8;
+  color: rgba(255,255,255,0.5);
+  margin-bottom: 24px;
+}
+
+.review-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.review-author { font-size: 12px; font-weight: 500; letter-spacing: 0.08em; color: rgba(232,201,122,0.7); }
+.review-level { font-size: 10px; color: rgba(255,255,255,0.2); margin-top: 2px; }
+.review-stars { color: var(--sand); font-size: 12px; letter-spacing: 2px; }
+
+/* ── INFO ── */
+#info {
+  position: relative;
+  z-index: 2;
+  padding: 100px 60px;
+}
+
+.info-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 80px;
+  align-items: start;
+}
+
+.info-list { display: flex; flex-direction: column; gap: 2px; }
+
+.info-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 20px;
+  padding: 24px 28px;
+  background: rgba(255,255,255,0.02);
+  border: 1px solid rgba(232,201,122,0.05);
+  transition: background 0.3s;
+}
+
+.info-row:hover { background: rgba(255,255,255,0.04); }
+
+.info-row-icon { font-size: 22px; flex-shrink: 0; padding-top: 2px; }
+.info-row-label { font-size: 9px; letter-spacing: 0.2em; text-transform: uppercase; color: rgba(232,201,122,0.4); margin-bottom: 4px; }
+.info-row-val { font-size: 15px; font-weight: 300; color: rgba(255,255,255,0.7); line-height: 1.5; }
+.info-row-val a { color: var(--sand); text-decoration: none; }
+.info-row-val a:hover { text-decoration: underline; }
+
+.info-aside {
+  padding: 48px;
+  background: linear-gradient(145deg, rgba(192,68,27,0.12), rgba(232,201,122,0.04));
+  border: 1px solid rgba(232,201,122,0.12);
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+.info-aside-title {
+  font-family: 'Cinzel', serif;
+  font-size: 22px;
+  font-weight: 600;
+  color: var(--sand);
+  letter-spacing: 0.08em;
+}
+
+.info-aside-text {
+  font-size: 14px;
+  font-weight: 300;
+  line-height: 1.8;
+  color: rgba(255,255,255,0.4);
+}
+
+.info-hours-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+.hour-item {
+  font-size: 12px;
+  display: flex;
+  justify-content: space-between;
+  padding: 8px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+  color: rgba(255,255,255,0.3);
+}
+
+.hour-item span:last-child { color: rgba(232,201,122,0.6); }
+
+/* ── FOOTER ── */
+footer {
+  position: relative;
+  z-index: 2;
+  background: #060403;
+  padding: 60px 60px 36px;
+  border-top: 1px solid rgba(232,201,122,0.08);
+}
+
+.footer-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr;
+  gap: 60px;
+}
+
+.footer-brand-name {
+  font-family: 'Cinzel', serif;
+  font-size: 36px;
+  font-weight: 900;
+  color: var(--sand);
+  letter-spacing: 0.12em;
+  opacity: 0.7;
+}
+
+.footer-brand-tag {
+  font-size: 9px;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.2);
+  margin-top: 6px;
+}
+
+.footer-brand-desc {
+  font-size: 13px;
+  font-weight: 300;
+  line-height: 1.7;
+  color: rgba(255,255,255,0.2);
+  margin-top: 20px;
+  max-width: 280px;
+}
+
+.footer-col-title {
+  font-size: 9px;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: rgba(232,201,122,0.4);
+  margin-bottom: 20px;
+}
+
+.footer-links { display: flex; flex-direction: column; gap: 10px; }
+.footer-links a {
+  font-size: 13px;
+  font-weight: 300;
+  color: rgba(255,255,255,0.25);
+  text-decoration: none;
+  transition: color 0.3s;
+}
+
+.footer-links a:hover { color: var(--sand); }
+
+.footer-bottom {
+  max-width: 1200px;
+  margin: 40px auto 0;
+  padding-top: 24px;
+  border-top: 1px solid rgba(255,255,255,0.04);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  color: rgba(255,255,255,0.12);
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+/* ── SCROLL REVEAL ── */
+.reveal {
+  opacity: 0;
+  transform: translateY(28px);
+  transition: opacity 0.8s ease, transform 0.8s ease;
+}
+.reveal.visible { opacity: 1; transform: none; }
+.reveal-delay-1 { transition-delay: 0.1s; }
+.reveal-delay-2 { transition-delay: 0.22s; }
+.reveal-delay-3 { transition-delay: 0.34s; }
+
+/* ── RESPONSIVE ── */
+@media (max-width: 1024px) {
+  #about { grid-template-columns: 1fr; gap: 60px; padding: 80px 40px; }
+  .about-visual { height: 280px; }
+  .about-card-a { right: 20px; bottom: 80px; }
+  .about-card-b { left: 20px; }
+  .exp-grid { grid-template-columns: repeat(2,1fr); }
+  .menu-items { grid-template-columns: 1fr; }
+  .menu-featured { grid-column: 1; }
+  .reviews-grid { grid-template-columns: 1fr; }
+  .info-inner { grid-template-columns: 1fr; gap: 40px; }
+  .footer-inner { grid-template-columns: 1fr 1fr; gap: 40px; }
+}
+
+@media (max-width: 768px) {
+  nav { padding: 18px 24px; }
+  nav.scrolled { padding: 14px 24px; }
+  .nav-links { display: none; }
+  .hamburger { display: flex; }
+  #about, #experience, #menu, #reviews, #info { padding: 70px 24px; }
+  footer { padding: 50px 24px 28px; }
+  .exp-grid { grid-template-columns: 1fr 1fr; }
+  .hero { padding: 100px 24px 60px; }
+  .footer-inner { grid-template-columns: 1fr; gap: 32px; }
+  body { cursor: auto; }
+  #cursor, #cursor-ring { display: none; }
+  .lang-bar { padding: 12px 20px; }
+}
+
+@media (max-width: 480px) {
+  .exp-grid { grid-template-columns: 1fr; }
+  .hero-badges { gap: 20px; }
+  .hero-badge-sep { display: none; }
+  .menu-row { flex-direction: column; align-items: flex-start; }
+}
+</style>
+</head>
+<body>
+
+<!-- Custom Cursor -->
+<div id="cursor"></div>
+<div id="cursor-ring"></div>
+
+<!-- Stars Canvas -->
+<canvas id="stars-canvas"></canvas>
+
+<!-- Lang Bar -->
+<div class="lang-bar">
+  <button class="lang-btn active" onclick="setLang('uz')">UZ</button>
+  <button class="lang-btn" onclick="setLang('ru')">RU</button>
+  <button class="lang-btn" onclick="setLang('en')">EN</button>
+</div>
+
+<!-- Nav -->
+<nav id="mainNav">
+  <a class="nav-logo" href="#">
+    <span class="nav-logo-main">Caravan</span>
+    <span class="nav-logo-sub" data-i18n="nav_sub">Premium Restaurant</span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="#about" data-i18n="nav_about">Haqimizda</a></li>
+    <li><a href="#experience" data-i18n="nav_exp">Tajriba</a></li>
+    <li><a href="#menu" data-i18n="nav_menu">Menyu</a></li>
+    <li><a href="#reviews" data-i18n="nav_reviews">Sharhlar</a></li>
+    <li><a href="#info" data-i18n="nav_info">Aloqa</a></li>
+  </ul>
+  <button class="hamburger" onclick="toggleMenu()">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<!-- Mobile Menu -->
+<div class="mobile-menu" id="mobileMenu">
+  <button class="close-menu" onclick="toggleMenu()">✕</button>
+  <a href="#about" onclick="toggleMenu()" data-i18n="nav_about">Haqimizda</a>
+  <a href="#experience" onclick="toggleMenu()" data-i18n="nav_exp">Tajriba</a>
+  <a href="#menu" onclick="toggleMenu()" data-i18n="nav_menu">Menyu</a>
+  <a href="#reviews" onclick="toggleMenu()" data-i18n="nav_reviews">Sharhlar</a>
+  <a href="#info" onclick="toggleMenu()" data-i18n="nav_info">Aloqa</a>
+</div>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-desert"></div>
+  <div class="hero-ornament-ring"></div>
+
+  <div class="hero-dunes">
+    <svg viewBox="0 0 1440 220" preserveAspectRatio="none" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M0 220 Q180 80 360 140 Q540 200 720 100 Q900 20 1080 120 Q1260 200 1440 80 L1440 220 Z" fill="rgba(192,68,27,0.07)"/>
+      <path d="M0 220 Q240 120 480 170 Q720 200 960 130 Q1200 60 1440 160 L1440 220 Z" fill="rgba(10,7,4,0.8)"/>
+    </svg>
+  </div>
+
+  <p class="hero-eyebrow" data-i18n="hero_eye"><span></span>Toshkent · Yakkasaray<span></span></p>
+
+  <div style="position:relative">
+    <h1 class="hero-title">CARAVAN</h1>
+    <div class="hero-title-shadow">CARAVAN</div>
+  </div>
+
+  <p class="hero-tagline" data-i18n="hero_tag">— Premium · Live Music · Till 02:00 —</p>
+
+  <div class="hero-badges">
+    <div class="hero-badge">
+      <span class="hero-badge-num">5.0</span>
+      <span class="hero-badge-label" data-i18n="badge_rating">Reyting</span>
+    </div>
+    <div class="hero-badge-sep"></div>
+    <div class="hero-badge">
+      <span class="hero-badge-num">1400</span>
+      <span class="hero-badge-label" data-i18n="badge_reviews">Sharh</span>
+    </div>
+    <div class="hero-badge-sep"></div>
+    <div class="hero-badge">
+      <span class="hero-badge-num">02:00</span>
+      <span class="hero-badge-label" data-i18n="badge_close">Yopilish</span>
+    </div>
+    <div class="hero-badge-sep"></div>
+    <div class="hero-badge">
+      <span class="hero-badge-num">553</span>
+      <span class="hero-badge-label" data-i18n="badge_photos">Foto</span>
+    </div>
+  </div>
+
+  <div class="hero-cta-wrap">
+    <a href="#menu" class="btn-gold" data-i18n="cta_menu">Menyuni Ko'rish</a>
+    <a href="#info" class="btn-ghost" data-i18n="cta_book">Bron Qilish</a>
+  </div>
+</section>
+
+<!-- MARQUEE -->
+<div class="marquee-wrap">
+  <div class="marquee-track">
+    <div class="marquee-item" data-i18n="mq1">Premium Restoran<div class="marquee-dot"></div></div>
+    <div class="marquee-item" data-i18n="mq2">Jonli Musiqa<div class="marquee-dot"></div></div>
+    <div class="marquee-item" data-i18n="mq3">02:00 gacha ochiq<div class="marquee-dot"></div></div>
+    <div class="marquee-item" data-i18n="mq4">Autentik Atmosfera<div class="marquee-dot"></div></div>
+    <div class="marquee-item" data-i18n="mq5">Yetkazib Berish<div class="marquee-dot"></div></div>
+    <div class="marquee-item" data-i18n="mq1b">Premium Restoran<div class="marquee-dot"></div></div>
+    <div class="marquee-item" data-i18n="mq2b">Jonli Musiqa<div class="marquee-dot"></div></div>
+    <div class="marquee-item" data-i18n="mq3b">02:00 gacha ochiq<div class="marquee-dot"></div></div>
+    <div class="marquee-item" data-i18n="mq4b">Autentik Atmosfera<div class="marquee-dot"></div></div>
+    <div class="marquee-item" data-i18n="mq5b">Yetkazib Berish<div class="marquee-dot"></div></div>
+  </div>
+</div>
+
+<!-- ABOUT -->
+<section id="about">
+  <div class="about-text reveal">
+    <p class="section-eyebrow" data-i18n="s_about">Haqimizda</p>
+    <h2 class="section-title" data-i18n="about_title">Karvon<br>Hikoyasi</h2>
+    <p data-i18n="about_p1">Caravan — bu oddiy restoran emas. Bu <strong>tajriba</strong>. Sharqning boy an'analarini zamonaviy premium xizmat bilan birlashtirgan bu joy, Toshkentning eng yaxshi kechki manzillaridan biriga aylangan.</p>
+    <p data-i18n="about_p2">Keng zal, <strong>jonli musiqa</strong>, va <strong>02:00 gacha</strong> davom etuvchi kechalar — bu yerda har bir ziyofat unutilmas bo'ladi. Ichki bezak an'anaviy sharq uslubida, ammo zamonaviy qulaylik bilan.</p>
+    <br>
+    <a href="#info" class="btn-gold" style="display:inline-block;margin-top:8px" data-i18n="about_cta">Manzilni Ko'rish</a>
+  </div>
+  <div class="about-visual reveal reveal-delay-2">
+    <div class="about-card about-card-a">
+      <div class="big-num">5.0</div>
+      <div class="big-label" data-i18n="av1">Yandex Maps Reytingi</div>
+    </div>
+    <div class="about-card about-card-b">
+      <div class="big-num">4090</div>
+      <div class="big-label" data-i18n="av2">Yig'ilgan ball</div>
+    </div>
+  </div>
+</section>
+
+<!-- EXPERIENCE -->
+<section id="experience">
+  <div class="exp-inner">
+    <p class="section-eyebrow reveal" data-i18n="s_exp">Tajriba</p>
+    <h2 class="section-title reveal" data-i18n="exp_title">Nima Kutadi<br>Sizni?</h2>
+    <div class="exp-grid">
+      <div class="exp-card reveal">
+        <span class="exp-icon">🎶</span>
+        <div class="exp-title" data-i18n="e1t">Jonli Musiqa</div>
+        <div class="exp-desc" data-i18n="e1d">Har kuni jonli musiqa ijrosi — shanba kechalari maxsus konsertlar</div>
+      </div>
+      <div class="exp-card reveal reveal-delay-1">
+        <span class="exp-icon">🌙</span>
+        <div class="exp-title" data-i18n="e2t">Tungi Restoran</div>
+        <div class="exp-desc" data-i18n="e2d">Toshkentda eng kech yopiladigan premium restoranlardan biri — 02:00 gacha</div>
+      </div>
+      <div class="exp-card reveal reveal-delay-2">
+        <span class="exp-icon">🏛️</span>
+        <div class="exp-title" data-i18n="e3t">Autentik Dizayn</div>
+        <div class="exp-desc" data-i18n="e3d">An'anaviy sharq uslubida bezatilgan keng va hashamatli zal</div>
+      </div>
+      <div class="exp-card reveal reveal-delay-3">
+        <span class="exp-icon">🍽️</span>
+        <div class="exp-title" data-i18n="e4t">Premium Menyu</div>
+        <div class="exp-desc" data-i18n="e4d">Lavash, sovuq va issiq ichimliklar, turli milliy va xalqaro taomlar</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- MENU -->
+<section id="menu">
+  <div class="menu-inner">
+    <div class="menu-header">
+      <div class="reveal">
+        <p class="section-eyebrow" data-i18n="s_menu">Menyu</p>
+        <h2 class="section-title" data-i18n="menu_title">Mashhur<br>Taomlar</h2>
+      </div>
+      <p class="menu-note reveal" data-i18n="menu_note">To'liq menyu uchun restoranga murojaat qiling yoki telefon orqali so'rang</p>
+    </div>
+    <div class="menu-items">
+
+      <div class="menu-row menu-featured reveal">
+        <div class="menu-row-left">
+          <div class="menu-featured-badge" data-i18n="badge_sig">Signature Dish</div>
+          <div class="menu-row-name" data-i18n="m1n">Лаваш Карavan</div>
+          <div class="menu-row-desc" data-i18n="m1d">Restoranımızning eng mashhur taomi — Caravan uslubida tayyorlangan lavash</div>
+        </div>
+        <div class="menu-row-price">102 500 so'm</div>
+      </div>
+
+      <div class="menu-row reveal">
+        <div class="menu-row-left">
+          <div class="menu-row-name" data-i18n="m2n">Ice Tea Caravan</div>
+          <div class="menu-row-desc" data-i18n="m2d">Maxsus retsept bo'yicha tayyorlangan sovuq choy</div>
+        </div>
+        <div class="menu-row-price">29 000 so'm</div>
+      </div>
+
+      <div class="menu-row reveal">
+        <div class="menu-row-left">
+          <div class="menu-row-name" data-i18n="m3n">Milliy Taomlar</div>
+          <div class="menu-row-desc" data-i18n="m3d">O'zbek oshxonasining eng sara taomlaridan iborat keng tanlam</div>
+        </div>
+        <div class="menu-row-price" data-i18n="price_vary">Narx o'zgaruvchan</div>
+      </div>
+
+      <div class="menu-row reveal reveal-delay-1">
+        <div class="menu-row-left">
+          <div class="menu-row-name" data-i18n="m4n">Premium Ichimliklar</div>
+          <div class="menu-row-desc" data-i18n="m4d">Freslar, kokteylar va boshqa ichimliklar to'plami</div>
+        </div>
+        <div class="menu-row-price" data-i18n="price_vary">Narx o'zgaruvchan</div>
+      </div>
+
+    </div>
+
+    <div style="margin-top:40px;text-align:center" class="reveal">
+      <p style="font-size:12px;color:rgba(255,255,255,0.2);font-style:italic;margin-bottom:20px" data-i18n="full_menu_note">To'liq menyu uchun murojaat qiling</p>
+      <a href="tel:+998781506606" class="btn-ghost" data-i18n="call_cta">📞 +998 78 150 66 06</a>
+    </div>
+  </div>
+</section>
+
+<!-- REVIEWS -->
+<section id="reviews">
+  <div class="reviews-inner">
+    <p class="section-eyebrow reveal" data-i18n="s_rev">Sharhlar</p>
+    <h2 class="section-title reveal" data-i18n="rev_title">Mehmonlar<br>Gapiradi</h2>
+    <div class="reviews-grid">
+
+      <div class="review-card reveal">
+        <span class="review-quote-mark">"</span>
+        <p class="review-text" data-i18n="r1">"Restoran juda yoqdi; borganimizda juda tinch edi va ichki bezak ajoyib. Taom 5/5, narx biroz baland lekin bu muammo emas."</p>
+        <div class="review-footer">
+          <div>
+            <div class="review-author">Muhammadjon O.</div>
+            <div class="review-level" data-i18n="lv11">11-darajali shahar mutaxassisi</div>
+          </div>
+          <div class="review-stars">★★★★★</div>
+        </div>
+      </div>
+
+      <div class="review-card reveal reveal-delay-1">
+        <span class="review-quote-mark">"</span>
+        <p class="review-text" data-i18n="r2">"Xodimlar juda e'tiborli. Joy katta va an'anaviy tarzda bezatilgan, jonli musiqa bor. Katta ziyofatlar uchun ideal."</p>
+        <div class="review-footer">
+          <div>
+            <div class="review-author">Meral C.</div>
+            <div class="review-level" data-i18n="lv3">3-darajali shahar mutaxassisi</div>
+          </div>
+          <div class="review-stars">★★★★★</div>
+        </div>
+      </div>
+
+      <div class="review-card reveal reveal-delay-2">
+        <span class="review-quote-mark">"</span>
+        <p class="review-text" data-i18n="r3">"Taomlar mazali, xizmat a'lo, atmosfera autentik. Davom etishingizni tilayman!"</p>
+        <div class="review-footer">
+          <div>
+            <div class="review-author">Salih C.</div>
+            <div class="review-level" data-i18n="lv9">9-darajali shahar mutaxassisi</div>
+          </div>
+          <div class="review-stars">★★★★★</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- INFO -->
+<section id="info">
+  <div style="max-width:1200px;margin:0 auto">
+    <p class="section-eyebrow reveal" data-i18n="s_info">Aloqa</p>
+    <h2 class="section-title reveal" data-i18n="info_title">Bizni<br>Toping</h2>
+  </div>
+  <div class="info-inner">
+    <div class="info-list reveal">
+      <div class="info-row">
+        <div class="info-row-icon">📍</div>
+        <div>
+          <div class="info-row-label" data-i18n="il_addr">Manzil</div>
+          <div class="info-row-val" data-i18n="iv_addr">Mahmud Tarobiy ko'chasi, 22,<br>Yakkasaray tumani, Toshkent</div>
+        </div>
+      </div>
+      <div class="info-row">
+        <div class="info-row-icon">🕐</div>
+        <div>
+          <div class="info-row-label" data-i18n="il_hrs">Ish vaqti</div>
+          <div class="info-row-val">12:00 — 02:00</div>
+        </div>
+      </div>
+      <div class="info-row">
+        <div class="info-row-icon">📞</div>
+        <div>
+          <div class="info-row-label" data-i18n="il_ph">Telefon</div>
+          <div class="info-row-val"><a href="tel:+998781506606">+998 78 150 66 06</a></div>
+        </div>
+      </div>
+      <div class="info-row">
+        <div class="info-row-icon">💰</div>
+        <div>
+          <div class="info-row-label" data-i18n="il_price">O'rtacha chek</div>
+          <div class="info-row-val" data-i18n="iv_price">100 000 – 200 000 so'm</div>
+        </div>
+      </div>
+      <div class="info-row">
+        <div class="info-row-icon">🚗</div>
+        <div>
+          <div class="info-row-label" data-i18n="il_srv">Xizmatlar</div>
+          <div class="info-row-val" data-i18n="iv_srv">Yetkazib berish · Olib ketish · Qadoqlangan qahva</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="info-aside reveal reveal-delay-1">
+      <div class="info-aside-title" data-i18n="ia_title">Kechki Ziyofat</div>
+      <div class="info-aside-text" data-i18n="ia_text">Caravan'da tungi muhit boshqacha. Jonli musiqa, qulay stol bron, va hashamatli xizmat bilan kechangizdagi ziyofatni unutilmas qiling.</div>
+      <a href="tel:+998781506606" class="btn-gold" style="text-align:center" data-i18n="ia_cta">Stol Bron Qilish</a>
+      <div>
+        <div style="font-size:9px;letter-spacing:0.2em;text-transform:uppercase;color:rgba(232,201,122,0.3);margin-bottom:12px" data-i18n="ia_nearby">Yaqin atrofda</div>
+        <div style="font-size:13px;font-weight:300;color:rgba(255,255,255,0.3);line-height:1.8">
+          Saodat savdo markazi — 283m<br>
+          Ming O'rik metro — 2.23 km
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div>
+      <div class="footer-brand-name">CARAVAN</div>
+      <div class="footer-brand-tag" data-i18n="ft_tag">Premium Restaurant · Tashkent</div>
+      <p class="footer-brand-desc" data-i18n="ft_desc">Sharqning boy an'analari va zamonaviy premium xizmatning uyg'unligi. Har kecha unutilmas.</p>
+    </div>
+    <div>
+      <div class="footer-col-title" data-i18n="fc_nav">Navigatsiya</div>
+      <div class="footer-links">
+        <a href="#about" data-i18n="nav_about">Haqimizda</a>
+        <a href="#experience" data-i18n="nav_exp">Tajriba</a>
+        <a href="#menu" data-i18n="nav_menu">Menyu</a>
+        <a href="#reviews" data-i18n="nav_reviews">Sharhlar</a>
+        <a href="#info" data-i18n="nav_info">Aloqa</a>
+      </div>
+    </div>
+    <div>
+      <div class="footer-col-title" data-i18n="fc_contact">Aloqa</div>
+      <div class="footer-links">
+        <a href="tel:+998781506606">+998 78 150 66 06</a>
+        <a href="#">Mahmud Tarobiy, 22</a>
+        <a href="#" data-i18n="fc_hours">12:00 — 02:00</a>
+      </div>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2024 Caravan Restaurant. All rights reserved.</span>
+    <span data-i18n="ft_made">Toshkent, O'zbekiston</span>
+  </div>
+</footer>
+
+<script>
+/* ── STARS ── */
+(function(){
+  const c = document.getElementById('stars-canvas');
+  const ctx = c.getContext('2d');
+  let stars = [];
+
+  function resize() {
+    c.width = window.innerWidth;
+    c.height = window.innerHeight;
+  }
+
+  function init() {
+    stars = [];
+    for (let i = 0; i < 220; i++) {
+      stars.push({
+        x: Math.random() * c.width,
+        y: Math.random() * c.height * 0.75,
+        r: Math.random() * 1.2 + 0.2,
+        a: Math.random(),
+        speed: Math.random() * 0.006 + 0.002,
+        phase: Math.random() * Math.PI * 2
+      });
+    }
+  }
+
+  function draw(t) {
+    ctx.clearRect(0, 0, c.width, c.height);
+    stars.forEach(s => {
+      const alpha = s.a * (0.5 + 0.5 * Math.sin(t * s.speed + s.phase));
+      ctx.beginPath();
+      ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(232,201,122,${alpha})`;
+      ctx.fill();
+    });
+    requestAnimationFrame(draw);
+  }
+
+  resize();
+  init();
+  window.addEventListener('resize', () => { resize(); init(); });
+  requestAnimationFrame(draw);
+})();
+
+/* ── CURSOR ── */
+const cur = document.getElementById('cursor');
+const ring = document.getElementById('cursor-ring');
+let mx = 0, my = 0, rx = 0, ry = 0;
+
+document.addEventListener('mousemove', e => {
+  mx = e.clientX; my = e.clientY;
+  cur.style.left = mx + 'px';
+  cur.style.top  = my + 'px';
+});
+
+(function movRing() {
+  rx += (mx - rx) * 0.12;
+  ry += (my - ry) * 0.12;
+  ring.style.left = rx + 'px';
+  ring.style.top  = ry + 'px';
+  requestAnimationFrame(movRing);
+})();
+
+document.querySelectorAll('a, button, .menu-row, .exp-card, .review-card').forEach(el => {
+  el.addEventListener('mouseenter', () => {
+    cur.style.width  = '18px';
+    cur.style.height = '18px';
+    ring.style.width  = '56px';
+    ring.style.height = '56px';
+  });
+  el.addEventListener('mouseleave', () => {
+    cur.style.width  = '10px';
+    cur.style.height = '10px';
+    ring.style.width  = '36px';
+    ring.style.height = '36px';
+  });
+});
+
+/* ── NAV SCROLL ── */
+window.addEventListener('scroll', () => {
+  document.getElementById('mainNav').classList.toggle('scrolled', window.scrollY > 60);
+});
+
+/* ── MOBILE MENU ── */
+function toggleMenu() {
+  document.getElementById('mobileMenu').classList.toggle('open');
+}
+
+/* ── SCROLL REVEAL ── */
+const obs = new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+}, { threshold: 0.08 });
+document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+
+/* ── TRANSLATIONS ── */
+const i18n = {
+  uz: {
+    nav_sub:"Premium Restaurant", nav_about:"Haqimizda", nav_exp:"Tajriba", nav_menu:"Menyu", nav_reviews:"Sharhlar", nav_info:"Aloqa",
+    hero_eye:"Toshkent · Yakkasaray",
+    hero_tag:"— Premium · Jonli Musiqa · 02:00 gacha —",
+    badge_rating:"Reyting", badge_reviews:"Sharh", badge_close:"Yopilish", badge_photos:"Foto",
+    cta_menu:"Menyuni Ko'rish", cta_book:"Stol Bron Qilish",
+    mq1:"Premium Restoran", mq2:"Jonli Musiqa", mq3:"02:00 gacha ochiq", mq4:"Autentik Atmosfera", mq5:"Yetkazib Berish",
+    mq1b:"Premium Restoran", mq2b:"Jonli Musiqa", mq3b:"02:00 gacha ochiq", mq4b:"Autentik Atmosfera", mq5b:"Yetkazib Berish",
+    s_about:"Haqimizda", about_title:"Karvon\nHikoyasi",
+    about_p1:"Caravan — bu oddiy restoran emas. Bu <strong>tajriba</strong>. Sharqning boy an'analarini zamonaviy premium xizmat bilan birlashtirgan bu joy, Toshkentning eng yaxshi kechki manzillaridan biriga aylangan.",
+    about_p2:"Keng zal, <strong>jonli musiqa</strong>, va <strong>02:00 gacha</strong> davom etuvchi kechalar — bu yerda har bir ziyofat unutilmas bo'ladi. Ichki bezak an'anaviy sharq uslubida, ammo zamonaviy qulaylik bilan.",
+    about_cta:"Manzilni Ko'rish",
+    av1:"Yandex Maps Reytingi", av2:"Yig'ilgan ball",
+    s_exp:"Tajriba", exp_title:"Nima Kutadi\nSizni?",
+    e1t:"Jonli Musiqa", e1d:"Har kuni jonli musiqa ijrosi — shanba kechalari maxsus konsertlar",
+    e2t:"Tungi Restoran", e2d:"Toshkentda eng kech yopiladigan premium restoranlardan biri — 02:00 gacha",
+    e3t:"Autentik Dizayn", e3d:"An'anaviy sharq uslubida bezatilgan keng va hashamatli zal",
+    e4t:"Premium Menyu", e4d:"Lavash, sovuq va issiq ichimliklar, turli milliy va xalqaro taomlar",
+    s_menu:"Menyu", menu_title:"Mashhur\nTaomlar",
+    menu_note:"To'liq menyu uchun restoranga murojaat qiling yoki telefon orqali so'rang",
+    badge_sig:"Signature Dish",
+    m1n:"Лаваш Caravan", m1d:"Restoranımızning eng mashhur taomi — Caravan uslubida tayyorlangan lavash",
+    m2n:"Ice Tea Caravan", m2d:"Maxsus retsept bo'yicha tayyorlangan sovuq choy",
+    m3n:"Milliy Taomlar", m3d:"O'zbek oshxonasining eng sara taomlaridan iborat keng tanlam",
+    m4n:"Premium Ichimliklar", m4d:"Freslar, kokteylar va boshqa ichimliklar to'plami",
+    price_vary:"Narx o'zgaruvchan",
+    full_menu_note:"To'liq menyu uchun murojaat qiling",
+    call_cta:"📞 +998 78 150 66 06",
+    s_rev:"Sharhlar", rev_title:"Mehmonlar\nGapiradi",
+    r1:'"Restoran juda yoqdi; borganimizda juda tinch edi va ichki bezak ajoyib. Taom 5/5, narx biroz baland lekin bu muammo emas."',
+    r2:'"Xodimlar juda e\'tiborli. Joy katta va an\'anaviy tarzda bezatilgan, jonli musiqa bor. Katta ziyofatlar uchun ideal."',
+    r3:'"Taomlar mazali, xizmat a\'lo, atmosfera autentik. Davom etishingizni tilayman!"',
+    lv11:"11-darajali shahar mutaxassisi", lv3:"3-darajali shahar mutaxassisi", lv9:"9-darajali shahar mutaxassisi",
+    s_info:"Aloqa", info_title:"Bizni\nToping",
+    il_addr:"Manzil", iv_addr:"Mahmud Tarobiy ko'chasi, 22,<br>Yakkasaray tumani, Toshkent",
+    il_hrs:"Ish vaqti", il_ph:"Telefon",
+    il_price:"O'rtacha chek", iv_price:"100 000 – 200 000 so'm",
+    il_srv:"Xizmatlar", iv_srv:"Yetkazib berish · Olib ketish · Qadoqlangan qahva",
+    ia_title:"Kechki Ziyofat", ia_text:"Caravan'da tungi muhit boshqacha. Jonli musiqa, qulay stol bron, va hashamatli xizmat bilan kechangizdagi ziyofatni unutilmas qiling.",
+    ia_cta:"Stol Bron Qilish", ia_nearby:"Yaqin atrofda",
+    ft_tag:"Premium Restaurant · Toshkent",
+    ft_desc:"Sharqning boy an'analari va zamonaviy premium xizmatning uyg'unligi. Har kecha unutilmas.",
+    fc_nav:"Navigatsiya", fc_contact:"Aloqa", fc_hours:"12:00 — 02:00",
+    ft_made:"Toshkent, O'zbekiston",
+  },
+  ru: {
+    nav_sub:"Премиум Ресторан", nav_about:"О нас", nav_exp:"Опыт", nav_menu:"Меню", nav_reviews:"Отзывы", nav_info:"Контакты",
+    hero_eye:"Ташкент · Яккасарай",
+    hero_tag:"— Премиум · Живая музыка · До 02:00 —",
+    badge_rating:"Рейтинг", badge_reviews:"Отзывов", badge_close:"Закрытие", badge_photos:"Фото",
+    cta_menu:"Смотреть меню", cta_book:"Забронировать стол",
+    mq1:"Премиум Ресторан", mq2:"Живая Музыка", mq3:"Открыто до 02:00", mq4:"Аутентичная Атмосфера", mq5:"Доставка",
+    mq1b:"Премиум Ресторан", mq2b:"Живая Музыка", mq3b:"Открыто до 02:00", mq4b:"Аутентичная Атмосфера", mq5b:"Доставка",
+    s_about:"О нас", about_title:"История\nКарвана",
+    about_p1:"Caravan — это не просто ресторан. Это <strong>опыт</strong>. Место, соединяющее богатые традиции Востока с современным премиум-сервисом.",
+    about_p2:"Просторный зал, <strong>живая музыка</strong> и вечера до <strong>02:00</strong> — каждый визит здесь незабываем. Интерьер в традиционном восточном стиле с современными удобствами.",
+    about_cta:"Посмотреть адрес",
+    av1:"Рейтинг на Яндекс Картах", av2:"Накоплено баллов",
+    s_exp:"Опыт", exp_title:"Что Вас\nОжидает?",
+    e1t:"Живая Музыка", e1d:"Живые выступления каждый день — особые концерты по субботам",
+    e2t:"Ночной Ресторан", e2d:"Один из самых поздно работающих премиум-ресторанов Ташкента — до 02:00",
+    e3t:"Аутентичный Дизайн", e3d:"Просторный роскошный зал в традиционном восточном стиле",
+    e4t:"Премиум Меню", e4d:"Лаваш, холодные и горячие напитки, широкий выбор блюд",
+    s_menu:"Меню", menu_title:"Популярные\nБлюда",
+    menu_note:"За полным меню обращайтесь в ресторан или звоните по телефону",
+    badge_sig:"Фирменное блюдо",
+    m1n:"Лаваш Карaван", m1d:"Самое популярное блюдо нашего ресторана — лаваш в стиле Карaван",
+    m2n:"Ice Tea Caravan", m2d:"Холодный чай по особому рецепту",
+    m3n:"Национальные блюда", m3d:"Широкий выбор лучших блюд узбекской кухни",
+    m4n:"Премиум напитки", m4d:"Фреши, коктейли и другие напитки",
+    price_vary:"Цена варьируется",
+    full_menu_note:"Обращайтесь за полным меню",
+    call_cta:"📞 +998 78 150 66 06",
+    s_rev:"Отзывы", rev_title:"Говорят\nГости",
+    r1:'"Ресторан очень понравился; было тихо и интерьер великолепен. Еда 5/5, цена немного высокая, но это не проблема."',
+    r2:'"Персонал очень внимателен. Место большое и оформлено в традиционном стиле, есть живая музыка. Идеально для больших застолий."',
+    r3:'"Еда вкусная, обслуживание отличное, атмосфера аутентичная. Желаю дальнейших успехов!"',
+    lv11:"Эксперт города, уровень 11", lv3:"Эксперт города, уровень 3", lv9:"Эксперт города, уровень 9",
+    s_info:"Контакты", info_title:"Найдите\nНас",
+    il_addr:"Адрес", iv_addr:"ул. Махмуд Таробий, 22,<br>Яккасарайский район, Ташкент",
+    il_hrs:"Часы работы", il_ph:"Телефон",
+    il_price:"Средний чек", iv_price:"100 000 – 200 000 сум",
+    il_srv:"Услуги", iv_srv:"Доставка · Самовывоз · Кофе с собой",
+    ia_title:"Вечернее Торжество", ia_text:"В Caravan ночная атмосфера особенная. Живая музыка, бронирование столиков и роскошный сервис сделают ваш вечер незабываемым.",
+    ia_cta:"Забронировать стол", ia_nearby:"Рядом",
+    ft_tag:"Премиум Ресторан · Ташкент",
+    ft_desc:"Гармония богатых традиций Востока и современного премиум-сервиса. Каждый вечер незабываем.",
+    fc_nav:"Навигация", fc_contact:"Контакты", fc_hours:"12:00 — 02:00",
+    ft_made:"Ташкент, Узбекистан",
+  },
+  en: {
+    nav_sub:"Premium Restaurant", nav_about:"About", nav_exp:"Experience", nav_menu:"Menu", nav_reviews:"Reviews", nav_info:"Contact",
+    hero_eye:"Tashkent · Yakkasaray",
+    hero_tag:"— Premium · Live Music · Open Till 02:00 —",
+    badge_rating:"Rating", badge_reviews:"Reviews", badge_close:"Closes At", badge_photos:"Photos",
+    cta_menu:"View Menu", cta_book:"Book A Table",
+    mq1:"Premium Restaurant", mq2:"Live Music", mq3:"Open Till 02:00", mq4:"Authentic Atmosphere", mq5:"Food Delivery",
+    mq1b:"Premium Restaurant", mq2b:"Live Music", mq3b:"Open Till 02:00", mq4b:"Authentic Atmosphere", mq5b:"Food Delivery",
+    s_about:"About", about_title:"The Caravan\nStory",
+    about_p1:"Caravan is not just a restaurant. It is an <strong>experience</strong>. Blending the rich traditions of the East with modern premium service, it has become one of Tashkent's finest evening destinations.",
+    about_p2:"A grand hall, <strong>live music</strong>, and evenings that last until <strong>02:00</strong> — every gathering here becomes a memory. Traditional Eastern interior with contemporary comfort.",
+    about_cta:"Find Us",
+    av1:"Yandex Maps Rating", av2:"Points Earned",
+    s_exp:"Experience", exp_title:"What Awaits\nYou?",
+    e1t:"Live Music", e1d:"Live performances every night — special concerts on Saturdays",
+    e2t:"Night Restaurant", e2d:"One of Tashkent's latest-closing premium restaurants — open till 02:00",
+    e3t:"Authentic Design", e3d:"Spacious and lavish hall decorated in traditional Eastern style",
+    e4t:"Premium Menu", e4d:"Lavash, cold and hot beverages, diverse national and international dishes",
+    s_menu:"Menu", menu_title:"Featured\nDishes",
+    menu_note:"For the full menu, contact the restaurant or call us",
+    badge_sig:"Signature Dish",
+    m1n:"Lavash Caravan", m1d:"Our most famous dish — lavash prepared in the Caravan signature style",
+    m2n:"Ice Tea Caravan", m2d:"Cold tea made to a special house recipe",
+    m3n:"National Dishes", m3d:"A wide selection of the finest Uzbek cuisine dishes",
+    m4n:"Premium Beverages", m4d:"Fresh juices, cocktails and other beverages",
+    price_vary:"Price varies",
+    full_menu_note:"Contact us for the full menu",
+    call_cta:"📞 +998 78 150 66 06",
+    s_rev:"Reviews", rev_title:"Guests\nSpeak",
+    r1:'"I liked the restaurant very much; it was very quiet when we went, and the interior design was excellent. Food 5/5, price a little high but that\'s not a problem."',
+    r2:'"The staff were very attentive. The place is large and traditionally designed, and there\'s live music. Ideal for large gatherings."',
+    r3:'"The food is delicious, the service is excellent, and it has an authentic atmosphere. Wishing you continued success!"',
+    lv11:"Level 11 City Expert", lv3:"Level 3 City Expert", lv9:"Level 9 City Expert",
+    s_info:"Contact", info_title:"Find\nUs",
+    il_addr:"Address", iv_addr:"Mahmud Tarobiy Street, 22,<br>Yakkasaray District, Tashkent",
+    il_hrs:"Opening Hours", il_ph:"Phone",
+    il_price:"Average Bill", iv_price:"100,000 – 200,000 UZS",
+    il_srv:"Services", iv_srv:"Delivery · Takeaway · Coffee To Go",
+    ia_title:"Evening Celebration", ia_text:"The nighttime atmosphere at Caravan is unlike anywhere else. Live music, easy table reservations, and luxurious service will make your evening truly unforgettable.",
+    ia_cta:"Book A Table", ia_nearby:"Nearby",
+    ft_tag:"Premium Restaurant · Tashkent",
+    ft_desc:"The harmony of rich Eastern traditions and modern premium service. Every evening unforgettable.",
+    fc_nav:"Navigation", fc_contact:"Contact", fc_hours:"12:00 — 02:00",
+    ft_made:"Tashkent, Uzbekistan",
+  }
+};
+
+function setLang(lang) {
+  document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
+  document.querySelector(`.lang-btn[onclick="setLang('${lang}')"]`).classList.add('active');
+  const t = i18n[lang];
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const k = el.getAttribute('data-i18n');
+    if (t[k] !== undefined) el.innerHTML = t[k];
+  });
+}
+</script>
+</body>
+</html>
